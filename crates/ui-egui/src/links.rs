@@ -17,7 +17,7 @@ pub const LINKS: &[(&str, &str, &str)] = &[
     ("app.help", "FreeANDIY Light Help", HELP),
     ("app.website", "FreeANDIY Light Website", APP_PAGE),
     ("app.github", "FreeANDIY Light on GitHub", GITHUB),
-    ("app.artcraft", "FreeANDIY Website", WEBSITE),
+    ("app.freeandiyWebsite", "FreeANDIY Website", WEBSITE),
     ("app.feedback", "Send Feedback…", FEEDBACK),
 ];
 

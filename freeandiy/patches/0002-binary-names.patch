@@ -1,0 +1,33 @@
+diff --git a/apps/lightcraft-cli/Cargo.toml b/apps/lightcraft-cli/Cargo.toml
+index b82aca1d..a5e1d99b 100644
+--- a/apps/lightcraft-cli/Cargo.toml
++++ b/apps/lightcraft-cli/Cargo.toml
+@@ -6,8 +6,9 @@ license.workspace = true
+ publish = false
+ description = "LightCraft command-line tool: headless render, command listing and the MCP server"
+ 
++# FreeANDIY: the executable carries the product name; the package keeps upstream's.
+ [[bin]]
+-name = "lightcraft-cli"
++name = "freeandiy-light-cli"
+ path = "src/main.rs"
+ 
+ [lints]
+diff --git a/apps/lightcraft/Cargo.toml b/apps/lightcraft/Cargo.toml
+index bbe495c7..64128ebe 100644
+--- a/apps/lightcraft/Cargo.toml
++++ b/apps/lightcraft/Cargo.toml
+@@ -4,7 +4,12 @@ version.workspace = true
+ edition.workspace = true
+ license.workspace = true
+ publish = false
+-default-run = "lightcraft"
++default-run = "freeandiy-light"
++
++# FreeANDIY: the executable carries the product name; the package keeps upstream's.
++[[bin]]
++name = "freeandiy-light"
++path = "src/main.rs"
+ 
+ [lints]
+ workspace = true

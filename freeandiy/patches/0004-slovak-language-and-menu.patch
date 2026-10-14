@@ -1,0 +1,58 @@
+diff --git a/crates/ui-egui/src/i18n.rs b/crates/ui-egui/src/i18n.rs
+index 109accfa..6725687d 100644
+--- a/crates/ui-egui/src/i18n.rs
++++ b/crates/ui-egui/src/i18n.rs
+@@ -126,6 +126,8 @@ language_table! {
+     Ru, "ru", "Русский", "Cyrl", include_str!("../locales/ru.json");
+     Fr, "fr", "Français", "Latn", include_str!("../locales/fr.json");
+     Uk, "uk", "Українська", "Cyrl", include_str!("../locales/uk.json");
++    // Slovak (added by FreeANDIY): menus and common labels so far; the rest shows English.
++    Sk, "sk", "Slovenčina", "Latn", include_str!("../locales/sk.json");
+ }
+ 
+ // The settings file stores the BCP-47 code (`"zh-hans"`), never the Rust variant name, so a
+@@ -667,6 +669,7 @@ mod tests {
+             ("app.language.german", Locale::De),
+             ("app.language.russian", Locale::Ru),
+             ("app.language.ukrainian", Locale::Uk),
++            ("app.language.slovak", Locale::Sk),
+         ];
+         // One command per language, and every command reachable from the menu table.
+         assert_eq!(commands.len(), Locale::ALL.len());
+diff --git a/crates/ui-egui/src/menus.rs b/crates/ui-egui/src/menus.rs
+index ad31c57b..d4d4b670 100644
+--- a/crates/ui-egui/src/menus.rs
++++ b/crates/ui-egui/src/menus.rs
+@@ -24,6 +24,7 @@ pub const LANGUAGE_COMMANDS: &[UiCommand] = &[
+     ("app.language.german", crate::i18n::Locale::De.name(), None, "Edit>Language"),
+     ("app.language.russian", crate::i18n::Locale::Ru.name(), None, "Edit>Language"),
+     ("app.language.ukrainian", crate::i18n::Locale::Uk.name(), None, "Edit>Language"),
++    ("app.language.slovak", crate::i18n::Locale::Sk.name(), None, "Edit>Language"),
+ ];
+ 
+ /// Every UI command: the languages, then everything else. `xtask parity` reads both tables from
+@@ -46,6 +47,7 @@ pub fn language_from_command(id: &str) -> Option<crate::i18n::Locale> {
+         "app.language.german" => Some(crate::i18n::Locale::De),
+         "app.language.russian" => Some(crate::i18n::Locale::Ru),
+         "app.language.ukrainian" => Some(crate::i18n::Locale::Uk),
++        "app.language.slovak" => Some(crate::i18n::Locale::Sk),
+         _ => None,
+     }
+ }
+@@ -208,7 +210,6 @@ pub const UI_COMMANDS: &[UiCommand] = &[
+     ("app.whatsNew", "What's New", None, "Help"),
+     ("dialog.cull", "Assisted Culling…", None, "Photo"),
+     ("app.help", "LightCraft Help", Some("F1"), "Help"),
+-    ("app.discord", "Join the ArtCraft Discord…", None, "Help"),
+     ("app.feedback", "Send Feedback…", None, "Help"),
+     ("app.website", "LightCraft Website", None, "Help"),
+     ("app.github", "LightCraft on GitHub", None, "Help"),
+@@ -1878,7 +1879,7 @@ pub fn run_ui_command(app: &mut LightcraftApp, id: &str, p: &Value) -> Option<Re
+         "app.export" => crate::control::export_active(app, p),
+         "app.showInFinder" => show_in_finder(app),
+         "app.openLogFolder" => open_log_folder(app),
+-        "app.discord" | "app.website" | "app.github" | "app.artcraft" | "app.help" | "app.feedback" => {
++        "app.website" | "app.github" | "app.artcraft" | "app.help" | "app.feedback" => {
+             let url = crate::links::url_of(id).unwrap_or(crate::links::WEBSITE);
+             crate::links::open(app, url)
+         }

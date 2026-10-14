@@ -1,0 +1,135 @@
+diff --git a/crates/ui-egui/src/lib.rs b/crates/ui-egui/src/lib.rs
+index 37fb86df..966aea82 100644
+--- a/crates/ui-egui/src/lib.rs
++++ b/crates/ui-egui/src/lib.rs
+@@ -14,6 +14,7 @@ pub mod credits;
+ pub mod date_picker;
+ pub mod docking;
+ pub mod export_task;
++pub mod freeandiy;
+ pub mod headless;
+ pub mod i18n;
+ pub mod icons;
+diff --git a/crates/ui-egui/src/links.rs b/crates/ui-egui/src/links.rs
+index 151fac95..3b77d34e 100644
+--- a/crates/ui-egui/src/links.rs
++++ b/crates/ui-egui/src/links.rs
+@@ -1,9 +1,7 @@
+-//! Community and project links (Help menu, About dialog, top-bar Discord button).
++//! Project links (Help menu, About dialog).
+ 
+ /// The app's id in ArtCraft URLs.
+ pub const APP: &str = "lightcraft";
+-/// The ArtCraft community Discord.
+-pub const DISCORD: &str = "https://discord.gg/artcraft";
+ /// The ArtCraft website.
+ pub const WEBSITE: &str = "https://getartcraft.com";
+ /// This app's page on the ArtCraft website.
+@@ -17,7 +15,6 @@ pub const HELP: &str = "https://github.com/storytold/lightcraft/tree/main/docs";
+ 
+ pub const LINKS: &[(&str, &str, &str)] = &[
+     ("app.help", "LightCraft Help", HELP),
+-    ("app.discord", "Join the ArtCraft Discord…", DISCORD),
+     ("app.website", "LightCraft Website", APP_PAGE),
+     ("app.github", "LightCraft on GitHub", GITHUB),
+     ("app.artcraft", "ArtCraft Website", WEBSITE),
+@@ -50,7 +47,7 @@ mod tests {
+             assert!(!label.is_empty());
+             assert_eq!(url_of(id), Some(*url));
+         }
+-        assert!(APP_PAGE.ends_with(&format!("/apps/{APP}")));
+-        assert!(GITHUB.ends_with(&format!("/storytold/{APP}")));
++        assert!(APP_PAGE.starts_with(WEBSITE));
++        assert!(GITHUB.starts_with("https://github.com/"));
+     }
+ }
+diff --git a/crates/ui-egui/src/menubar.rs b/crates/ui-egui/src/menubar.rs
+index fe6905ca..426b8767 100644
+--- a/crates/ui-egui/src/menubar.rs
++++ b/crates/ui-egui/src/menubar.rs
+@@ -234,7 +234,6 @@ const LAYOUT: &[(&str, &[&str])] = &[
+     (
+         "Help",
+         &[
+-            "app.discord",
+             "app.feedback",
+             "---",
+             "app.website",
+diff --git a/crates/ui-egui/src/panels/dialogs.rs b/crates/ui-egui/src/panels/dialogs.rs
+index a79261fd..ccad2c4a 100644
+--- a/crates/ui-egui/src/panels/dialogs.rs
++++ b/crates/ui-egui/src/panels/dialogs.rs
+@@ -1169,14 +1169,7 @@ pub fn show(app: &mut LightcraftApp, ctx: &egui::Context) {
+                                 crate::theme::font_credits(app.chinese_font.is_some())
+                             ));
+                             ui.add_space(10.0);
+-                            let discord = egui::Button::new(egui::RichText::new(crate::i18n::tr("Join the ArtCraft Discord")).font(t.semibold(15.0)).color(egui::Color32::WHITE))
+-                                .fill(t.accent)
+-                                .min_size(egui::vec2(260.0, 34.0));
+-                            let r = ui.add(discord).on_hover_text(crate::links::DISCORD);
+-                            crate::widgets::register(ui.ctx(), "button:aboutDiscord", r.rect);
+-                            if r.clicked() {
+-                                let _ = crate::links::open(app, crate::links::DISCORD);
+-                            }
++                            crate::freeandiy::about_attribution(ui);
+                             ui.add_space(6.0);
+                             for (label, url) in [
+                                 ("LightCraft website", crate::links::APP_PAGE),
+diff --git a/crates/ui-egui/src/panels/topbar.rs b/crates/ui-egui/src/panels/topbar.rs
+index 03810aca..4bdb102e 100644
+--- a/crates/ui-egui/src/panels/topbar.rs
++++ b/crates/ui-egui/src/panels/topbar.rs
+@@ -162,7 +162,6 @@ pub fn show(app: &mut LightcraftApp, ui: &mut egui::Ui) {
+             });
+             let cloud_tip = unsaved.as_deref().unwrap_or("Local library — no cloud account needed");
+             for (id, icon, tip, cmd) in [
+-                ("discord", Icon::Chat, "Join the ArtCraft community on Discord", "app.discord"),
+                 ("cloud", Icon::Cloud, cloud_tip, ""),
+                 ("help", Icon::Help, "Keyboard shortcuts", "app.shortcuts"),
+                 ("share", Icon::Share, "Export", "dialog.export"),
+diff --git a/crates/ui-egui/src/theme.rs b/crates/ui-egui/src/theme.rs
+index 282f9c70..5912c587 100644
+--- a/crates/ui-egui/src/theme.rs
++++ b/crates/ui-egui/src/theme.rs
+@@ -162,6 +162,11 @@ impl Default for Tokens {
+ impl Tokens {
+     /// The tokens of `kind`. Metrics are shared; only colours change.
+     pub fn for_kind(kind: ThemeKind) -> Tokens {
++        crate::freeandiy::tokens(kind, Self::upstream(kind))
++    }
++
++    /// Upstream's tokens (FreeANDIY restyles them in `crate::freeandiy::tokens`).
++    fn upstream(kind: ThemeKind) -> Tokens {
+         let rgb = |v: u32| Color32::from_rgb((v >> 16) as u8, (v >> 8) as u8, v as u8);
+         let base = Tokens::default();
+         match kind {
+@@ -277,8 +282,10 @@ pub fn font_definitions(craft: &'static [lightcraft_engine::CraftFont]) -> FontD
+ /// Prefer it for Chinese UI text, including Traditional Chinese until it has its own face.
+ pub fn font_definitions_with_chinese(craft: &'static [lightcraft_engine::CraftFont], chinese: Option<&Arc<FontData>>) -> FontDefinitions {
+     let mut fonts = FontDefinitions::default();
+-    fonts.font_data.insert("Inter".into(), Arc::new(FontData::from_static(include_bytes!("../../../assets/fonts/Inter-Regular.ttf"))));
+-    fonts.font_data.insert("Inter-SemiBold".into(), Arc::new(FontData::from_static(include_bytes!("../../../assets/fonts/Inter-SemiBold.ttf"))));
++    // FreeANDIY: the UI face is IBM Plex Sans (`crate::freeandiy::fonts`), under upstream's font
++    // keys so the font stacks and their tests stay unchanged.
++    fonts.font_data.insert("Inter".into(), Arc::new(FontData::from_static(crate::freeandiy::fonts::sans_regular())));
++    fonts.font_data.insert("Inter-SemiBold".into(), Arc::new(FontData::from_static(crate::freeandiy::fonts::sans_semibold())));
+     // Craft-fonts faces in preference order for a family drawn in `style`.
+     let fallback = |style: &str| {
+         lightcraft_engine::fonts::ui_fallback(craft, crate::i18n::language().script(), style)
+@@ -335,7 +342,7 @@ pub fn font_definitions_with_chinese(craft: &'static [lightcraft_engine::CraftFo
+ 
+ /// The font families used by this app instance, including the browser's separately loaded face.
+ pub fn font_credits(chinese_loaded: bool) -> String {
+-    let mut families = vec!["Inter"];
++    let mut families = vec!["IBM Plex Sans"];
+     for f in lightcraft_engine::CRAFT_FONTS {
+         if !families.contains(&f.family) {
+             families.push(f.family);
+@@ -421,6 +428,7 @@ pub fn apply_kind(ctx: &egui::Context, kind: ThemeKind) {
+     let (popup, window) = if dark { (140, 160) } else { (50, 60) };
+     v.popup_shadow = egui::epaint::Shadow { offset: [0, 4], blur: 16, spread: 0, color: Color32::from_black_alpha(popup) };
+     v.window_shadow = egui::epaint::Shadow { offset: [0, 8], blur: 30, spread: 0, color: Color32::from_black_alpha(window) };
++    crate::freeandiy::visuals(&mut v);
+     let w = &mut v.widgets;
+     craft_ui::theme::WidgetPalette { noninteractive: t.chrome, inactive: t.button, hovered: t.hover, active: t.pressed, open: t.hover }.apply_to(
+         w,

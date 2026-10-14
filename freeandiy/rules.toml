@@ -484,3 +484,13 @@ include = ["packaging/**", "apps/*/build.rs"]
 find = "Learning Machines LLC"
 replace = "{{brand.owner}}"
 min = 1
+
+# ---------------------------------------------------------------------------------------------
+# Help ▸ What's New shows docs/whats-new.md in the app.
+
+[[replace]]
+name = "What's New: the product name"
+include = ["docs/whats-new.md"]
+regex = '\bLightCraft\b'
+replace = "{{this.name}}"
+min = 1

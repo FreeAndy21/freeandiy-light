@@ -256,8 +256,8 @@ min = 3
 name = "product name after an escaped newline in strings (\\nLightCraft)"
 include = ["**/*.rs"]
 exclude = ["xtask/**"]
-find = '\\nLightCraft'
-replace = '\\n{{this.name}}'
+find = '\nLightCraft'
+replace = '\n{{this.name}}'
 skip_comments = ["//"]
 min = 1
 

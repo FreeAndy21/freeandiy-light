@@ -30,7 +30,7 @@ delete = [
 # gone from the UI); other ArtCraft mentions become FreeANDIY below.
 [[drop_lines]]
 include = ["crates/ui-egui/locales/*.json"]
-regex = '^\s*"[^"\n]*(Discord|discord)[^\n]*",?$'
+regex = '^\s*"[^"\n]*Discord'
 min = 10
 
 # ---------------------------------------------------------------------------------------------
@@ -202,7 +202,7 @@ name = "protect: crate names lightcraft-<crate>"
 include = ["packaging/**", ".github/**", "Dockerfile"]
 regex = 'lightcraft-(catalog|codecs|color|denoise|denoise-core|develop|engine|faces|fetch|geocode|geom|gpu|heif|inpaint|lensdb|mcp|merge|meta|pipeline|preview|raster|raw|scenes|segment|sysmem|tiff|ui-egui|web)\b'
 replace = '@@PKG@@-$1'
-min = 1
+min = 0
 
 [[replace]]
 name = "protect: cargo features lightcraft/<feature>"

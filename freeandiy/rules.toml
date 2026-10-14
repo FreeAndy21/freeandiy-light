@@ -22,6 +22,9 @@ delete = [
   ".github/workflows/windows-arm64.yml",
   ".github/workflows/packaging-lint.yml",
   ".github/workflows/freebsd.yml",
+  "nix",                                         # upstream's Nix packaging (FreeANDIY doesn't ship one)
+  "flake.nix",
+  "flake.lock",
   "packaging/icons.sh",                          # icons come from the FreeANDIY meta repository
   "packaging/macos/dmg",                         # background and layout derived from upstream's icon; ours is copied in
 ]
@@ -240,6 +243,29 @@ name = "Info.plist custom keys: LightCraftVersion"
 include = ["packaging/**"]
 regex = 'LightCraft(Version|BuildCommit)'
 replace = 'FreeANDIYLight${1}'
+min = 1
+
+[[replace]]
+name = "command id app.artcraft (the FreeANDIY website link)"
+include = ["**/*.rs", "docs/**", "crates/ui-egui/locales/*.json"]
+find = '"app.artcraft"'
+replace = '"app.freeandiyWebsite"'
+min = 3
+
+[[replace]]
+name = "product name after an escaped newline in strings (\\nLightCraft)"
+include = ["**/*.rs"]
+exclude = ["xtask/**"]
+find = '\\nLightCraft'
+replace = '\\n{{this.name}}'
+skip_comments = ["//"]
+min = 1
+
+[[replace]]
+name = "installer test registry key"
+include = ["packaging/**"]
+find = "LightCraftInstallerTests"
+replace = "FreeANDIYLightInstallerTests"
 min = 1
 
 [[replace]]

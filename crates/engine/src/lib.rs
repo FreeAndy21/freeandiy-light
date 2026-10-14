@@ -91,15 +91,15 @@ pub enum EngineError {
     Catalog(#[from] lightcraft_catalog::CatalogError),
     /// The command's change is applied (in memory, undoable) but its journal records could not
     /// be written. They stay queued and are written by the next successful save.
-    #[error("saved in memory but not written to disk: {0}; LightCraft will retry")]
+    #[error("saved in memory but not written to disk: {0}; FreeANDIY Light will retry")]
     NotSaved(String),
-    /// Another process (the app, `lightcraft-cli`, another computer) has the library open.
+    /// Another process (the app, `freeandiy-light-cli`, another computer) has the library open.
     #[error("{0}")]
     LibraryInUse(String),
     /// The folder (or file) asked for is a Lightroom Classic catalog or part of one, not a
     /// LightCraft library (issue #891): nothing was created or opened. `catalog`: the `.lrcat`
     /// to import with `library.importLightroom`, when one was found.
-    #[error("{} is a Lightroom Classic catalog, not a LightCraft library; import it into a LightCraft library with File ▸ Import Lightroom Catalog…{}", path.display(), catalog.as_ref().map_or(String::new(), |c| format!(" ({})", c.display())))]
+    #[error("{} is a Lightroom Classic catalog, not a FreeANDIY Light library; import it into a FreeANDIY Light library with File ▸ Import Lightroom Catalog…{}", path.display(), catalog.as_ref().map_or(String::new(), |c| format!(" ({})", c.display())))]
     LightroomCatalog { path: std::path::PathBuf, catalog: Option<std::path::PathBuf> },
     /// The work was cancelled (by the person, an agent or a newer request): not a failure.
     #[error("{0}")]
@@ -318,7 +318,7 @@ pub struct Session {
     /// Apple Photos imports run on a worker by default (`export.addToPhotos` without `wait`,
     /// `app.export` without `background`): set by the desktop app, which answers control requests
     /// on its UI thread. Off (the default), they wait for Photos, so a one-shot process
-    /// (lightcraft-cli, a script) never ends in the middle of one.
+    /// (freeandiy-light-cli, a script) never ends in the middle of one.
     #[cfg(not(target_arch = "wasm32"))]
     pub apple_photos_background: bool,
 }

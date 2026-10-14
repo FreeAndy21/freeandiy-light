@@ -7,18 +7,18 @@
 
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
-    println!("cargo:rerun-if-changed=../../assets/app-icon/lightcraft.ico");
+    println!("cargo:rerun-if-changed=../../assets/app-icon/freeandiy-light.ico");
     println!("cargo:rerun-if-env-changed=LIGHTCRAFT_REQUIRE_WINRES");
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() != Ok("windows") {
         return;
     }
     let mut res = winresource::WindowsResource::new();
-    res.set_icon("../../assets/app-icon/lightcraft.ico")
-        .set("ProductName", "LightCraft")
-        .set("FileDescription", "LightCraft photo library and raw developer")
-        .set("LegalCopyright", "Copyright (c) the LightCraft authors. MIT OR Apache-2.0.")
-        .set("OriginalFilename", "lightcraft.exe")
-        .set("InternalName", "lightcraft");
+    res.set_icon("../../assets/app-icon/freeandiy-light.ico")
+        .set("ProductName", "FreeANDIY Light")
+        .set("FileDescription", "FreeANDIY Light photo library and raw developer")
+        .set("LegalCopyright", "Copyright (c) Free Andy Agency and the LightCraft authors. MIT OR Apache-2.0.")
+        .set("OriginalFilename", "freeandiy-light.exe")
+        .set("InternalName", "freeandiy-light");
     if let Err(e) = res.compile() {
         if std::env::var_os("LIGHTCRAFT_REQUIRE_WINRES").is_some() {
             panic!("embedding Windows resources failed: {e}");

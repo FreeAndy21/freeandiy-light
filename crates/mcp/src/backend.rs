@@ -93,7 +93,7 @@ impl Remote {
 
     fn unknown_outcome(&self, method: &str, e: &std::io::Error) -> String {
         let addr = &self.addr;
-        format!("lost the LightCraft app at {addr} after sending `{method}` ({e}); the outcome is unknown and it was not resent, check the app")
+        format!("lost the FreeANDIY Light app at {addr} after sending `{method}` ({e}); the outcome is unknown and it was not resent, check the app")
     }
 }
 
@@ -124,7 +124,7 @@ impl Backend for Remote {
                     if sent {
                         self.unknown_outcome(method, &e)
                     } else {
-                        format!("LightCraft app at {} is not reachable: {e} (start it with `lightcraft --control PORT`)", self.addr)
+                        format!("FreeANDIY Light app at {} is not reachable: {e} (start it with `lightcraft --control PORT`)", self.addr)
                     }
                 })?
             }

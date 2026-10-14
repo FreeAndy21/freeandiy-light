@@ -2,7 +2,7 @@
 //! the CPU ([`crate::softpaint`]) — no window, no GPU, no compositor.
 //!
 //! Two users:
-//! - [`Headless`]: a complete windowless app session (`lightcraft-cli snapshot`, tests). It plays
+//! - [`Headless`]: a complete windowless app session (`freeandiy-light-cli snapshot`, tests). It plays
 //!   the role eframe plays for the desktop app: builds [`egui::RawInput`], runs `logic` + `ui`,
 //!   keeps a CPU mirror of the textures, executes viewport commands (`Screenshot` is answered with
 //!   a CPU-rendered frame, `InnerSize` resizes, `Close` quits). Control-protocol requests go
@@ -247,7 +247,7 @@ pub struct Headless {
     pub last_cursor: egui::CursorIcon,
 }
 
-/// A headless run (`lightcraft-cli snapshot`, tests) is a one-shot process: however it ends, it
+/// A headless run (`freeandiy-light-cli snapshot`, tests) is a one-shot process: however it ends, it
 /// first waits for an Apple Photos import its script left running (`export.addToPhotos {wait:
 /// false}`), bounded, so it never abandons osascript or the import's result.
 impl Drop for Headless {
@@ -1993,7 +1993,7 @@ mod tests {
         h.settle(SETTLE);
         assert!(preview(&mut h).is_none(), "no preview without a watermark");
         if let Some(crate::state::Dialog::Export { opts, .. }) = &mut h.app.ui.dialog {
-            opts.watermark = Some(lightcraft_engine::export::Watermark { text: "© LightCraft".into(), ..Default::default() });
+            opts.watermark = Some(lightcraft_engine::export::Watermark { text: "© FreeANDIY Light".into(), ..Default::default() });
         }
         let t0 = Instant::now();
         while preview(&mut h).is_none() && t0.elapsed() < Duration::from_secs(30) {

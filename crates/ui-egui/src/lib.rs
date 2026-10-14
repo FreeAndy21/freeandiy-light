@@ -14,6 +14,7 @@ pub mod credits;
 pub mod date_picker;
 pub mod docking;
 pub mod export_task;
+pub mod freeandiy;
 pub mod headless;
 pub mod i18n;
 pub mod icons;
@@ -704,7 +705,7 @@ impl LightcraftApp {
                 let t = ctx.input(|i| i.time);
                 self.ui.toast = Some((
                     crate::i18n::tr_format!(
-                        "{n} change{} saved in memory but not written to disk: {e} — LightCraft will retry",
+                        "{n} change{} saved in memory but not written to disk: {e} — FreeANDIY Light will retry",
                         if n == 1 { "" } else { "s" },
                         n = n,
                         e = e
@@ -1301,8 +1302,8 @@ impl LightcraftApp {
     /// "LightCraft — <library name>" (just "LightCraft" for a library that isn't saved).
     pub fn window_title(&self) -> String {
         match panels::settings::open_library_name(self) {
-            Some(name) => format!("LightCraft — {name}"),
-            None => "LightCraft".to_string(),
+            Some(name) => format!("FreeANDIY Light — {name}"),
+            None => "FreeANDIY Light".to_string(),
         }
     }
 

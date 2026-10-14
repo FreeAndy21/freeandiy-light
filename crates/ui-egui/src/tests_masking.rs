@@ -1010,13 +1010,13 @@ fn edit_in_external_editor_opens_the_copy() {
     };
     let app = LightcraftApp::new(lightcraft_engine::Session::with_demo().with_fs(), services);
     let mut h = Headless::new(app, [1200.0, 800.0], 1.0);
-    h.app.ui.settings.external_editor = "PhotoCraft".into();
+    h.app.ui.settings.external_editor = "FreeANDIY Photo".into();
     let r = h.request("engine.execute", json!({"command": "photo.editInExternal", "params": {"dir": dir.to_string_lossy()}}), T);
     assert_eq!(r["ok"], true, "{r}");
     let calls = opened.lock().unwrap().clone();
     assert_eq!(calls.len(), 1);
     assert!(calls[0].0.ends_with("-Edit.tif") && std::path::Path::new(&calls[0].0).exists(), "{calls:?}");
-    assert_eq!(calls[0].1, "PhotoCraft");
+    assert_eq!(calls[0].1, "FreeANDIY Photo");
     let _ = std::fs::remove_dir_all(&dir);
     h.settle(SETTLE);
 }
@@ -1039,7 +1039,7 @@ fn edit_in_photocraft_opens_a_psd_copy() {
         })),
         check_editor: Some(Box::new(move |app: &str| {
             if app == crate::state::PHOTOCRAFT && !i.load(std::sync::atomic::Ordering::SeqCst) {
-                Err("PhotoCraft isn't installed".into())
+                Err("FreeANDIY Photo isn't installed".into())
             } else {
                 Ok(())
             }
@@ -1049,28 +1049,28 @@ fn edit_in_photocraft_opens_a_psd_copy() {
     let app = LightcraftApp::new(lightcraft_engine::Session::with_demo().with_fs(), services);
     let mut h = Headless::new(app, [1200.0, 800.0], 1.0);
     let n = h.app.session.catalog.len();
-    let params = json!({"command": "photo.editInPhotoCraft", "params": {"dir": dir.to_string_lossy()}});
+    let params = json!({"command": "photo.editInFreeANDIY Photo", "params": {"dir": dir.to_string_lossy()}});
     let r = h.request("engine.execute", params.clone(), T);
     assert_eq!(r["ok"], false, "{r}");
-    assert_eq!((h.app.session.catalog.len(), opened.lock().unwrap().len()), (n, 0), "no copy without PhotoCraft");
+    assert_eq!((h.app.session.catalog.len(), opened.lock().unwrap().len()), (n, 0), "no copy without FreeANDIY Photo");
     installed.store(true, std::sync::atomic::Ordering::SeqCst);
     let r = h.request("engine.execute", params, T);
     assert_eq!(r["ok"], true, "{r}");
     let calls = opened.lock().unwrap().clone();
     assert_eq!(calls.len(), 1);
     assert!(calls[0].0.ends_with("-Edit.psd") && std::path::Path::new(&calls[0].0).exists(), "{calls:?}");
-    assert_eq!(calls[0].1, "PhotoCraft");
+    assert_eq!(calls[0].1, "FreeANDIY Photo");
     let d = lightcraft_codecs::decode(&std::fs::read(&calls[0].0).unwrap(), Default::default()).unwrap();
     assert_eq!(d.bit_depth, 16, "16-bit by default");
     // a portable copy: its path is what the host is given; the file follows the settings
     h.app.ui.settings.photocraft_path = "/opt/pc/photocraft".into();
     h.app.ui.settings.photocraft_file.format = crate::state::EditFormat::Tiff;
     h.app.ui.settings.photocraft_file.bit_depth = 8;
-    let r = h.request("engine.execute", json!({"command": "photo.editInPhotoCraft", "params": {"dir": dir.to_string_lossy()}}), T);
+    let r = h.request("engine.execute", json!({"command": "photo.editInFreeANDIY Photo", "params": {"dir": dir.to_string_lossy()}}), T);
     assert_eq!(r["ok"], true, "{r}");
     let last = opened.lock().unwrap().last().cloned().unwrap();
     assert!(last.0.ends_with(".tif") && last.1 == "/opt/pc/photocraft", "{last:?}");
-    assert!(crate::menus::ui_enabled(&h.app, "photo.editInPhotoCraft"));
+    assert!(crate::menus::ui_enabled(&h.app, "photo.editInFreeANDIY Photo"));
     let _ = std::fs::remove_dir_all(&dir);
     h.settle(SETTLE);
 }

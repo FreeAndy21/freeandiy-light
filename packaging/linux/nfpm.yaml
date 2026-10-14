@@ -3,7 +3,7 @@
 # exports VERSION and NFPM_ARCH.
 #
 #   nfpm package -f packaging/linux/nfpm.yaml -p deb -t dist/release/
-name: lightcraft
+name: freeandiy-light
 arch: ${NFPM_ARCH}
 platform: linux
 version: ${VERSION}
@@ -14,13 +14,13 @@ section: graphics
 priority: optional
 maintainer: ${LIGHTCRAFT_MAINTAINER}
 vendor: Learning Machines LLC
-homepage: https://getartcraft.com/apps/lightcraft
+homepage: https://freeandiy.freeandy.agency/light
 license: MIT OR Apache-2.0
 description: |-
   Open-source, native photo library and raw developer that works the way
   Lightroom users expect. Import, rate, keyword and organise photos; develop
   raw files non-destructively with exposure, tone, color grading, masks and
-  presets; GPU processing (wgpu). Includes lightcraft-cli, a headless renderer
+  presets; GPU processing (wgpu). Includes freeandiy-light-cli, a headless renderer
   and command runner.
 
 # The binaries link only glibc and libgcc_s directly. Windowing (X11/Wayland, xkbcommon) and the
@@ -56,11 +56,11 @@ overrides:
       - xdg-desktop-portal
 
 contents:
-  - src: ${STAGE}/usr/bin/lightcraft
-    dst: /usr/bin/lightcraft
+  - src: ${STAGE}/usr/bin/freeandiy-light
+    dst: /usr/bin/freeandiy-light
     file_info: { mode: 0755 }
-  - src: ${STAGE}/usr/bin/lightcraft-cli
-    dst: /usr/bin/lightcraft-cli
+  - src: ${STAGE}/usr/bin/freeandiy-light-cli
+    dst: /usr/bin/freeandiy-light-cli
     file_info: { mode: 0755 }
   - src: ${STAGE}/usr/share/
     dst: /usr/share/

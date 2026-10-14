@@ -24,6 +24,7 @@ pub const LANGUAGE_COMMANDS: &[UiCommand] = &[
     ("app.language.german", crate::i18n::Locale::De.name(), None, "Edit>Language"),
     ("app.language.russian", crate::i18n::Locale::Ru.name(), None, "Edit>Language"),
     ("app.language.ukrainian", crate::i18n::Locale::Uk.name(), None, "Edit>Language"),
+    ("app.language.slovak", crate::i18n::Locale::Sk.name(), None, "Edit>Language"),
 ];
 
 /// Every UI command: the languages, then everything else. `xtask parity` reads both tables from
@@ -46,6 +47,7 @@ pub fn language_from_command(id: &str) -> Option<crate::i18n::Locale> {
         "app.language.german" => Some(crate::i18n::Locale::De),
         "app.language.russian" => Some(crate::i18n::Locale::Ru),
         "app.language.ukrainian" => Some(crate::i18n::Locale::Uk),
+        "app.language.slovak" => Some(crate::i18n::Locale::Sk),
         _ => None,
     }
 }
@@ -167,7 +169,7 @@ pub const UI_COMMANDS: &[UiCommand] = &[
     ("dialog.export", "Export…", None, "File"),
     ("dialog.contactSheet", "Contact Sheet PDF…", None, "File"),
     ("app.contactSheet", "Export Contact Sheet PDF", None, ""),
-    ("photo.editInPhotoCraft", "Edit in PhotoCraft", Some("Cmd+Shift+E"), "Photo>Edit In"),
+    ("photo.editInFreeANDIY Photo", "Edit in FreeANDIY Photo", Some("Cmd+Shift+E"), "Photo>Edit In"),
     ("photo.editInExternal", "Edit in Other Editor", Some("Cmd+Alt+E"), "Photo>Edit In"),
     // {ids?, app?}: the original files themselves (a raw stays a raw: no render, no copy), opened
     // in the other editor, e.g. a raw developer
@@ -187,7 +189,7 @@ pub const UI_COMMANDS: &[UiCommand] = &[
     ("file.restoreLibrary", "Restore Library from Backup…", None, "File"),
     ("photo.locate", "Locate Missing File…", None, ""),
     ("dialog.saveMetadataPreset", "Save Metadata Preset…", None, ""),
-    ("app.quit", "Quit LightCraft", Some("Cmd+Q"), "File"),
+    ("app.quit", "Quit FreeANDIY Light", Some("Cmd+Q"), "File"),
     ("file.importPresets", "Import Profiles & Presets…", None, "File"),
     ("file.exportPresets", "Export Presets…", None, "File"),
     ("file.importKeywords", "Import Keywords…", None, "File"),
@@ -202,17 +204,16 @@ pub const UI_COMMANDS: &[UiCommand] = &[
     ("app.clearRecentLibraries", "Clear Recent Libraries", None, ""),
     // Settings ▸ Display
     ("app.displayProfile", "Display Profile", None, ""),
-    ("app.about", "About LightCraft", None, "Help"),
+    ("app.about", "About FreeANDIY Light", None, "Help"),
     ("app.systemInfo", "System Info…", None, "Help"),
     ("app.openLogFolder", "Open Log Folder", None, "Help"),
     ("app.whatsNew", "What's New", None, "Help"),
     ("dialog.cull", "Assisted Culling…", None, "Photo"),
-    ("app.help", "LightCraft Help", Some("F1"), "Help"),
-    ("app.discord", "Join the ArtCraft Discord…", None, "Help"),
+    ("app.help", "FreeANDIY Light Help", Some("F1"), "Help"),
     ("app.feedback", "Send Feedback…", None, "Help"),
-    ("app.website", "LightCraft Website", None, "Help"),
-    ("app.github", "LightCraft on GitHub", None, "Help"),
-    ("app.artcraft", "ArtCraft Website", None, "Help"),
+    ("app.website", "FreeANDIY Light Website", None, "Help"),
+    ("app.github", "FreeANDIY Light on GitHub", None, "Help"),
+    ("app.artcraft", "FreeANDIY Website", None, "Help"),
     ("app.shortcuts", "Keyboard Shortcuts", Some("Cmd+/"), "Help"),
     ("app.setShortcut", "Set Keyboard Shortcut", None, ""),
     ("app.resetShortcuts", "Reset All Keyboard Shortcuts", None, ""),
@@ -1258,7 +1259,7 @@ pub fn run_ui_command(app: &mut LightcraftApp, id: &str, p: &Value) -> Option<Re
             app.ui.dialog = Some(Dialog::About);
             Ok(Value::Null)
         }
-        "photo.editInPhotoCraft" => edit_in(app, &ctx, p, true),
+        "photo.editInFreeANDIY Photo" => edit_in(app, &ctx, p, true),
         "photo.editInExternal" => edit_in(app, &ctx, p, false),
         "photo.openOriginalInExternal" => open_original_in(app, &ctx, p),
         "dialog.cull" => {
@@ -1791,8 +1792,9 @@ pub fn run_ui_command(app: &mut LightcraftApp, id: &str, p: &Value) -> Option<Re
             let path = match p.get("path").and_then(Value::as_str) {
                 Some(x) => Some(x.to_string()),
                 None => {
-                    let name = format!("{}.lcpreset", group.as_deref().unwrap_or("LightCraft Presets"));
-                    let req = PickRequest::save(crate::i18n::tr("Export Presets"), crate::i18n::tr("LightCraft Preset"), &["lcpreset"], name.clone());
+                    let name = format!("{}.lcpreset", group.as_deref().unwrap_or("FreeANDIY Light Presets"));
+                    let req =
+                        PickRequest::save(crate::i18n::tr("Export Presets"), crate::i18n::tr("FreeANDIY Light Preset"), &["lcpreset"], name.clone());
                     match crate::pick::ask(app, id, p, "path", req, |s| s.save_preset_file.as_mut().map(|f| f(&name).into_iter().collect())) {
                         Picked::Now(v) => v.into_iter().next(),
                         Picked::Later => return Some(Ok(Value::Null)),
@@ -1878,7 +1880,7 @@ pub fn run_ui_command(app: &mut LightcraftApp, id: &str, p: &Value) -> Option<Re
         "app.export" => crate::control::export_active(app, p),
         "app.showInFinder" => show_in_finder(app),
         "app.openLogFolder" => open_log_folder(app),
-        "app.discord" | "app.website" | "app.github" | "app.artcraft" | "app.help" | "app.feedback" => {
+        "app.website" | "app.github" | "app.artcraft" | "app.help" | "app.feedback" => {
             let url = crate::links::url_of(id).unwrap_or(crate::links::WEBSITE);
             crate::links::open(app, url)
         }
@@ -1900,7 +1902,7 @@ pub fn ui_enabled(app: &LightcraftApp, id: &str) -> bool {
             app.session.active().is_some()
         }
         "photo.tagFromTracklog" => app.session.active().is_some() && app.services.pick_tracklog.is_some(),
-        "photo.editInPhotoCraft" | "photo.editInExternal" => app.session.active().is_some() && app.services.open_with.is_some(),
+        "photo.editInFreeANDIY Photo" | "photo.editInExternal" => app.session.active().is_some() && app.services.open_with.is_some(),
         "app.exportPrevious" => app.session.active().is_some() && app.session.last_export.is_some(),
         "dialog.pasteSettings" => app.session.active().is_some() && app.session.clipboard.is_some(),
         "photo.openOriginalInExternal" => {

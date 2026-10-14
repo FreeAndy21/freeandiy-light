@@ -56,7 +56,7 @@ let
   isLinux = stdenv.hostPlatform.isLinux;
 
   # AppStream id: also the desktop file name, and the icon name in share/icons/hicolor.
-  appId = "ai.storyteller.lightcraft";
+  appId = "agency.freeandy.light";
 
   # Libraries the binaries open at run time with dlopen(): nothing links them, so no RPATH points at
   # them — winit loads libwayland-client/libxkbcommon/libxcb, rfd libdbus-1, wgpu the Vulkan loader

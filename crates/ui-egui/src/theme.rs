@@ -162,6 +162,11 @@ impl Default for Tokens {
 impl Tokens {
     /// The tokens of `kind`. Metrics are shared; only colours change.
     pub fn for_kind(kind: ThemeKind) -> Tokens {
+        crate::freeandiy::tokens(kind, Self::upstream(kind))
+    }
+
+    /// Upstream's tokens (FreeANDIY restyles them in `crate::freeandiy::tokens`).
+    fn upstream(kind: ThemeKind) -> Tokens {
         let rgb = |v: u32| Color32::from_rgb((v >> 16) as u8, (v >> 8) as u8, v as u8);
         let base = Tokens::default();
         match kind {
@@ -277,8 +282,10 @@ pub fn font_definitions(craft: &'static [lightcraft_engine::CraftFont]) -> FontD
 /// Prefer it for Chinese UI text, including Traditional Chinese until it has its own face.
 pub fn font_definitions_with_chinese(craft: &'static [lightcraft_engine::CraftFont], chinese: Option<&Arc<FontData>>) -> FontDefinitions {
     let mut fonts = FontDefinitions::default();
-    fonts.font_data.insert("Inter".into(), Arc::new(FontData::from_static(include_bytes!("../../../assets/fonts/Inter-Regular.ttf"))));
-    fonts.font_data.insert("Inter-SemiBold".into(), Arc::new(FontData::from_static(include_bytes!("../../../assets/fonts/Inter-SemiBold.ttf"))));
+    // FreeANDIY: the UI face is IBM Plex Sans (`crate::freeandiy::fonts`), under upstream's font
+    // keys so the font stacks and their tests stay unchanged.
+    fonts.font_data.insert("Inter".into(), Arc::new(FontData::from_static(crate::freeandiy::fonts::sans_regular())));
+    fonts.font_data.insert("Inter-SemiBold".into(), Arc::new(FontData::from_static(crate::freeandiy::fonts::sans_semibold())));
     // Craft-fonts faces in preference order for a family drawn in `style`.
     let fallback = |style: &str| {
         lightcraft_engine::fonts::ui_fallback(craft, crate::i18n::language().script(), style)
@@ -335,7 +342,7 @@ pub fn font_definitions_with_chinese(craft: &'static [lightcraft_engine::CraftFo
 
 /// The font families used by this app instance, including the browser's separately loaded face.
 pub fn font_credits(chinese_loaded: bool) -> String {
-    let mut families = vec!["Inter"];
+    let mut families = vec!["IBM Plex Sans"];
     for f in lightcraft_engine::CRAFT_FONTS {
         if !families.contains(&f.family) {
             families.push(f.family);
@@ -421,6 +428,7 @@ pub fn apply_kind(ctx: &egui::Context, kind: ThemeKind) {
     let (popup, window) = if dark { (140, 160) } else { (50, 60) };
     v.popup_shadow = egui::epaint::Shadow { offset: [0, 4], blur: 16, spread: 0, color: Color32::from_black_alpha(popup) };
     v.window_shadow = egui::epaint::Shadow { offset: [0, 8], blur: 30, spread: 0, color: Color32::from_black_alpha(window) };
+    crate::freeandiy::visuals(&mut v);
     let w = &mut v.widgets;
     craft_ui::theme::WidgetPalette { noninteractive: t.chrome, inactive: t.button, hovered: t.hover, active: t.pressed, open: t.hover }.apply_to(
         w,

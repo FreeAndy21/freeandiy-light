@@ -6,8 +6,8 @@
 > keep their original photos elsewhere and to use **File ▸ Back Up Library…**. See
 > `docs/web.md` in the source for details.
 
-`lightcraft-web-<version>.zip` (from the GitHub release, or `packaging/web/package.sh`) holds a
-static site in `lightcraft-web-<version>/`:
+`freeandiy-light-<version>-web-wasm32.zip` (from the GitHub release, or `packaging/web/package.sh`) holds a
+static site in `freeandiy-light-<version>-web-wasm32/`:
 
 | File | What it is |
 |---|---|
@@ -25,7 +25,7 @@ There is no server-side code. Upload the folder's contents anywhere that serves 
 ## Any path works
 
 All URLs in `index.html` are relative, so the site works at a domain root
-(`https://example.com/`), under a prefix (`https://example.com/tools/lightcraft/`) and from a
+(`https://example.com/`), under a prefix (`https://example.com/tools/freeandiy-light/`) and from a
 CDN bucket.
 
 ## Required server settings
@@ -52,7 +52,7 @@ CDN bucket.
 nginx example:
 
 ```nginx
-location /lightcraft/ {
+location /freeandiy-light/ {
     types { application/wasm wasm; text/javascript js; text/html html; }
     gzip_static on;          # serves the .gz copies
     # brotli_static on;      # with ngx_brotli: serves the .br copies
@@ -75,7 +75,7 @@ One tab at a time can have the library open; a second tab shows a message instea
 
 ```html
 <iframe
-  src="https://example.com/lightcraft/"
+  src="https://example.com/freeandiy-light/"
   title="LightCraft image editor"
   style="width: 100%; height: 720px; border: 0;"
   allow="fullscreen; clipboard-read; clipboard-write"

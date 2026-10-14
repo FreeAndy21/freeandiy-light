@@ -126,6 +126,8 @@ language_table! {
     Ru, "ru", "Русский", "Cyrl", include_str!("../locales/ru.json");
     Fr, "fr", "Français", "Latn", include_str!("../locales/fr.json");
     Uk, "uk", "Українська", "Cyrl", include_str!("../locales/uk.json");
+    // Slovak (added by FreeANDIY): menus and common labels so far; the rest shows English.
+    Sk, "sk", "Slovenčina", "Latn", include_str!("../locales/sk.json");
 }
 
 // The settings file stores the BCP-47 code (`"zh-hans"`), never the Rust variant name, so a
@@ -206,10 +208,10 @@ include!(concat!(env!("OUT_DIR"), "/tr-formats.rs"));
 /// (issue #260), in the UI language: the error and, when there is one, the log file to look in.
 pub fn startup_failed_message(error: &str, log_file: Option<&str>) -> (String, String) {
     let text = match log_file {
-        Some(path) => tr_format!("LightCraft could not open its window: {e}\n\nThe log file has the details: {path}", e = error, path = path),
-        None => tr_format!("LightCraft could not open its window: {e}", e = error),
+        Some(path) => tr_format!("FreeANDIY Light could not open its window: {e}\n\nThe log file has the details: {path}", e = error, path = path),
+        None => tr_format!("FreeANDIY Light could not open its window: {e}", e = error),
     };
-    (tr("LightCraft could not start").to_string(), text)
+    (tr("FreeANDIY Light could not start").to_string(), text)
 }
 
 pub fn builtin_label(source: &str, builtin: bool) -> &str {
@@ -486,7 +488,7 @@ mod tests {
     #[test]
     fn startup_failure_message_names_the_error_and_the_log() {
         let (title, text) = startup_failed_message("no adapter", Some("/home/a/.config/lightcraft/logs/lightcraft.log"));
-        assert_eq!(title, "LightCraft could not start");
+        assert_eq!(title, "FreeANDIY Light could not start");
         assert!(text.contains("no adapter") && text.ends_with("lightcraft.log"), "{text}");
         assert!(!startup_failed_message("no adapter", None).1.contains("log file"));
     }
@@ -667,6 +669,7 @@ mod tests {
             ("app.language.german", Locale::De),
             ("app.language.russian", Locale::Ru),
             ("app.language.ukrainian", Locale::Uk),
+            ("app.language.slovak", Locale::Sk),
         ];
         // One command per language, and every command reachable from the menu table.
         assert_eq!(commands.len(), Locale::ALL.len());
@@ -900,7 +903,7 @@ mod tests {
         app.ui.left_panel = true;
         let text = painted_text(&ctx, &mut app, Locale::Uk);
         assert!(text.contains("Мої фото") && text.contains("Усі фото"), "{text}");
-        for (command, title) in [("app.about", "Про LightCraft"), ("app.shortcuts", "Клавіатурні скорочення"), ("app.settings", "Налаштування")]
+        for (command, title) in [("app.about", "Про FreeANDIY Light"), ("app.shortcuts", "Клавіатурні скорочення"), ("app.settings", "Налаштування")]
         {
             app.ui.dialog = None;
             app.run(command, serde_json::json!({})).unwrap();
@@ -1044,7 +1047,7 @@ mod tests {
         app.ui.view = crate::state::ViewMode::People;
         let text = painted_text(&ctx, &mut app, Locale::De);
         assert!(text.contains("Benannte Personen"), "{text}");
-        for (command, title) in [("app.about", "Über LightCraft"), ("app.shortcuts", "Tastenkürzel"), ("app.settings", "Einstellungen")] {
+        for (command, title) in [("app.about", "Über FreeANDIY Light"), ("app.shortcuts", "Tastenkürzel"), ("app.settings", "Einstellungen")] {
             app.ui.dialog = None;
             app.run(command, serde_json::json!({})).unwrap();
             let text = painted_text(&ctx, &mut app, Locale::De);
@@ -1232,7 +1235,7 @@ mod tests {
             // replacement-glyph face, which there is Hack, the face that draws Latin.)
             for family in [egui::FontFamily::Proportional, egui::FontFamily::Name(crate::theme::FONT_SEMIBOLD.into())] {
                 let font = egui::FontId::new(13.0, family);
-                assert!("LightCraft".chars().all(|ch| fonts.has_glyph(&font, ch)), "{font:?}");
+                assert!("FreeANDIY Light".chars().all(|ch| fonts.has_glyph(&font, ch)), "{font:?}");
             }
         });
         let mut app = crate::LightcraftApp::new(lightcraft_engine::Session::with_demo(), Default::default());

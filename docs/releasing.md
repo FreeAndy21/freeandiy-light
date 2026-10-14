@@ -43,7 +43,7 @@ and the WASM web app. The platform scripts in [`packaging/`](../packaging/) writ
 - FreeBSD: `lightcraft-<version>-freebsd-x86_64.tar.gz`, a `/usr/local`-style tree built in a
   FreeBSD 14.3 VM (`packaging/freebsd/package.sh`, the same packages as `freebsd.yml`). Install
   with `tar -xzf <file> --strip-components 1 -C /usr/local`.
-- Web: `lightcraft-web-<version>.zip`.
+- Web: `freeandiy-light-<version>-web-wasm32.zip`.
 
 Only the macOS, Windows and draft-release jobs use the `release` environment. The others sign
 nothing, so dispatching the workflow on a branch (`gh workflow run release.yml --ref <branch>`)

@@ -1,11 +1,11 @@
-//! End-to-end tests of the `lightcraft-cli` binary: `mcp` over real stdio pipes, `render`, `commands`.
+//! End-to-end tests of the `freeandiy-light-cli` binary: `mcp` over real stdio pipes, `render`, `commands`.
 
 use std::io::{BufRead, BufReader, Write};
 use std::process::{Command, Stdio};
 
 use serde_json::{Value, json};
 
-const BIN: &str = env!("CARGO_BIN_EXE_lightcraft-cli");
+const BIN: &str = env!("CARGO_BIN_EXE_freeandiy-light-cli");
 
 #[test]
 fn contact_sheet_exports_pdf_and_protects_originals() {
@@ -48,7 +48,7 @@ fn contact_sheet_exports_pdf_and_protects_originals() {
 }
 
 fn tmp(name: &str) -> std::path::PathBuf {
-    let d = std::env::temp_dir().join(format!("lightcraft-cli-test-{}", std::process::id()));
+    let d = std::env::temp_dir().join(format!("freeandiy-light-cli-test-{}", std::process::id()));
     std::fs::create_dir_all(&d).unwrap();
     d.join(name)
 }
@@ -455,7 +455,7 @@ fn a_library_open_in_another_process_is_refused() {
     }
     let (ok, _, stderr) = run_cli(&["--library", lib_s, "library.info"], None);
     assert!(!ok);
-    assert!(stderr.contains("already open in lightcraft-cli") && stderr.contains(&format!("process {}", holder.id())), "{stderr}");
+    assert!(stderr.contains("already open in freeandiy-light-cli") && stderr.contains(&format!("process {}", holder.id())), "{stderr}");
     assert!(stderr.contains("mcp --connect"), "{stderr}");
 
     drop(holder.stdin.take()); // EOF: the server exits and lets go of the library

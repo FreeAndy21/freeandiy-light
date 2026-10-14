@@ -4,7 +4,12 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 publish = false
-default-run = "lightcraft"
+default-run = "freeandiy-light"
+
+# FreeANDIY: the executable carries the product name; the package keeps upstream's.
+[[bin]]
+name = "freeandiy-light"
+path = "src/main.rs"
 
 [lints]
 workspace = true

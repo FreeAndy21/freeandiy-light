@@ -253,6 +253,13 @@ replace = '"app.freeandiyWebsite"'
 min = 3
 
 [[replace]]
+name = "protect: the Software tag of upstream's legacy DNGs (read to keep their original CFA anchoring)"
+include = ["crates/raw/src/dng.rs", "crates/raw/tests/dng.rs"]
+regex = '(Some\(|SOFTWARE, )"LightCraft"'
+replace = '${1}"@@LCLEGACY@@"'
+min = 2
+
+[[replace]]
 name = "product name after an escaped newline in strings (\\nLightCraft)"
 include = ["**/*.rs"]
 exclude = ["xtask/**"]
@@ -500,4 +507,11 @@ name = "config test: the Linux settings folder is freeandiy-light, like the code
 include = ["crates/engine/src/config.rs"]
 find = '/lightcraft")'
 replace = '/freeandiy-light")'
+min = 2
+
+[[replace]]
+name = "restore the legacy DNG Software tag"
+include = ["crates/raw/src/dng.rs", "crates/raw/tests/dng.rs"]
+find = "@@LCLEGACY@@"
+replace = "LightCraft"
 min = 2

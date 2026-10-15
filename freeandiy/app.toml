@@ -18,5 +18,6 @@ ci_tests = "true"
 [check]
 # check-branding.sh: extra allowed strings (regex) and Rust paths where the upstream name may stay
 # in string literals (git pathspecs, space-separated).
-allow = ""
+# Also: upstream's legacy DNGs are recognised by their "LightCraft" Software tag.
+allow = "Some\\(\"LightCraft\"\\)|SOFTWARE, \"LightCraft\""
 rs_exclude = ":!xtask/**"

@@ -515,3 +515,22 @@ include = ["crates/raw/src/dng.rs", "crates/raw/tests/dng.rs"]
 find = "@@LCLEGACY@@"
 replace = "LightCraft"
 min = 2
+
+# ---------------------------------------------------------------------------------------------
+# Upstream's "every language translates everything" checks, with the partial Slovak catalog
+# FreeANDIY adds (menus, commands, common dialogs and the core photo terms; the rest falls back to
+# English).
+
+[[replace]]
+name = "i18n tests: every complete language (not the partial Slovak one)"
+include = ["crates/ui-egui/src/i18n.rs"]
+regex = '\.filter\(\|(language|l)\| \*\*(language|l) != Locale::En\)'
+replace = '.filter(|${1}| !matches!(**${2}, Locale::En | Locale::Sk))'
+min = 3
+
+[[replace]]
+name = "keyword list test: FreeANDIY adds Slovak (partial, so not in the list of complete files)"
+include = ["crates/ui-egui/src/panels/keyword_list.rs"]
+find = 'assert_eq!(Locale::ALL.len(), 10, "a language added: list its file above");'
+replace = 'assert_eq!(Locale::ALL.len(), 11, "a language added: list its file above (FreeANDIY: Slovak is partial)");'
+min = 1

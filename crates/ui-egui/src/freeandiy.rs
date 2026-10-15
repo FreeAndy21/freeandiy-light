@@ -31,24 +31,13 @@ const fn channel(x: u8, y: u8, t: f32) -> u8 {
     (x as f32 + (y as f32 - x as f32) * t + 0.5) as u8
 }
 
-/// The UI font: IBM Plex Sans on the desktop (SIL Open Font License 1.1; licence in
-/// freeandiy/assets/fonts/). The web build keeps upstream's bundled Inter, so the wasm does not
-/// grow (static hosts cap a file at 25 MiB).
+/// The UI font. FreeANDIY Light keeps upstream's Inter: its panels and dialogs are laid out to
+/// Inter's metrics, and IBM Plex Sans (taller lines, wider text, no ⌥) pushes fields and dialogs
+/// out of view. The hook stays so the face can change in one place.
 pub mod fonts {
-    #[cfg(not(target_arch = "wasm32"))]
-    pub fn sans_regular() -> &'static [u8] {
-        include_bytes!("../../../freeandiy/assets/fonts/IBMPlexSans-Regular.ttf")
-    }
-    #[cfg(not(target_arch = "wasm32"))]
-    pub fn sans_semibold() -> &'static [u8] {
-        include_bytes!("../../../freeandiy/assets/fonts/IBMPlexSans-SemiBold.ttf")
-    }
-
-    #[cfg(target_arch = "wasm32")]
     pub fn sans_regular() -> &'static [u8] {
         include_bytes!("../../../assets/fonts/Inter-Regular.ttf")
     }
-    #[cfg(target_arch = "wasm32")]
     pub fn sans_semibold() -> &'static [u8] {
         include_bytes!("../../../assets/fonts/Inter-SemiBold.ttf")
     }

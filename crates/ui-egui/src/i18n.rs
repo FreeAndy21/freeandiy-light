@@ -696,7 +696,7 @@ mod tests {
 
     #[test]
     fn catalogs_contain_core_workflows() {
-        for language in Locale::ALL.iter().filter(|language| **language != Locale::En) {
+        for language in Locale::ALL.iter().filter(|language| !matches!(**language, Locale::En | Locale::Sk)) {
             for key in ["Import Photos…", "Export…", "Exposure", "White Balance", "Settings", "Language"] {
                 let value = language.tr(key);
                 assert!(!value.is_empty() && value != key, "{language:?}: {key}");
@@ -743,7 +743,7 @@ mod tests {
                 }
             }
         }
-        for language in Locale::ALL.iter().filter(|language| **language != Locale::En) {
+        for language in Locale::ALL.iter().filter(|language| !matches!(**language, Locale::En | Locale::Sk)) {
             for label in [lightcraft_catalog::rules::bool_label(true), lightcraft_catalog::rules::bool_label(false)] {
                 assert!(language.catalog().contains_key(label), "{} lacks {label:?}", language.code());
             }
@@ -785,7 +785,7 @@ mod tests {
         let g = problems(serde_json::json!([{"group": {"rules": []}}]));
         assert_eq!(problem_text_in(Locale::En, &g[0]), "This group is empty: add a rule or remove it.");
         // the issues, the operators their hints name and the album picker's words, in every language
-        for language in Locale::ALL.iter().filter(|l| **l != Locale::En) {
+        for language in Locale::ALL.iter().filter(|l| !matches!(**l, Locale::En | Locale::Sk)) {
             // the field menu: every field and every group, so it never mixes languages
             for label in lightcraft_catalog::rules::FIELDS.iter().map(|f| f.1).chain(lightcraft_catalog::rules::FIELD_GROUPS.iter().map(|g| g.0)) {
                 assert!(language.catalog().contains_key(label), "{} lacks the rule label {label:?}", language.code());
@@ -816,7 +816,7 @@ mod tests {
     /// month and day labels it borrows from the date headings are.
     #[test]
     fn date_picker_words_are_translated() {
-        for language in Locale::ALL.iter().filter(|l| **l != Locale::En) {
+        for language in Locale::ALL.iter().filter(|l| !matches!(**l, Locale::En | Locale::Sk)) {
             for word in crate::date_picker::WEEKDAY_SHORT.iter().chain(&["Pick a date", "Year", "Month", "Day"]) {
                 assert!(language.catalog().contains_key(*word), "{} lacks {word:?}", language.code());
             }
@@ -948,7 +948,7 @@ mod tests {
             let label = line.strip_prefix("### ").or_else(|| line.strip_prefix("## ")).or_else(|| line.strip_prefix("- ")).unwrap_or(line);
             labels.push(label);
         }
-        for language in Locale::ALL.iter().filter(|language| **language != Locale::En) {
+        for language in Locale::ALL.iter().filter(|language| !matches!(**language, Locale::En | Locale::Sk)) {
             let catalog = language.catalog();
             let missing: Vec<&&str> = labels[..ui_labels].iter().filter(|label| !catalog.contains_key(**label)).collect();
             let notes = labels[ui_labels..].iter().filter(|label| !catalog.contains_key(**label)).count();

@@ -534,3 +534,15 @@ include = ["crates/ui-egui/src/panels/keyword_list.rs"]
 find = 'assert_eq!(Locale::ALL.len(), 10, "a language added: list its file above");'
 replace = 'assert_eq!(Locale::ALL.len(), 11, "a language added: list its file above (FreeANDIY: Slovak is partial)");'
 min = 1
+
+[[replace]]
+name = "Settings: the language is a menu (eleven languages don't fit in a row of buttons)"
+include = ["crates/ui-egui/src/panels/settings.rs"]
+find = '''        choices(ui, "settingsLanguage", &languages, &mut app.ui.language);'''
+replace = '''        // FreeANDIY: with Slovak, eleven languages no longer fit in a row of buttons; a menu holds any number.
+        egui::ComboBox::from_id_salt("settingsLanguage").selected_text(app.ui.language.name()).show_ui(ui, |ui| {
+            for (language, name) in &languages {
+                ui.selectable_value(&mut app.ui.language, *language, *name);
+            }
+        });'''
+min = 1

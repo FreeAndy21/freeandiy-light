@@ -58,7 +58,7 @@ echo "==> FreeANDIY Light $VERSION for macOS ($ARCH), identity: $IDENTITY, notar
 if [ "$SKIP_BUILD" = 0 ]; then
   args=()
   for t in "${TARGETS[@]}"; do args+=(--target "$t"); done
-  (cd "$ROOT" && cargo build --release --locked -p lightcraft -p lightcraft-cli --features freeandiy-light/heif,freeandiy-light-cli/heif "${args[@]}")
+  (cd "$ROOT" && cargo build --release --locked -p lightcraft -p lightcraft-cli --features lightcraft/heif,lightcraft-cli/heif "${args[@]}")
 fi
 
 rm -rf "$WORK"

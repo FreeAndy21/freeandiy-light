@@ -45,7 +45,7 @@ BASENAME="freeandiy-light-$VERSION-linux-$ARCH"
 echo "==> FreeANDIY Light $VERSION for Linux $ARCH ($FORMATS)"
 
 if [ "$SKIP_BUILD" = 0 ]; then
-  (cd "$ROOT" && cargo build --release --locked -p lightcraft -p lightcraft-cli --features freeandiy-light/heif,freeandiy-light-cli/heif \
+  (cd "$ROOT" && cargo build --release --locked -p lightcraft -p lightcraft-cli --features lightcraft/heif,lightcraft-cli/heif \
     ${CROSS_TARGET:+--target "$CROSS_TARGET"})
 fi
 BIN="$CARGO_TARGET_DIR/${CROSS_TARGET:+$CROSS_TARGET/}release"

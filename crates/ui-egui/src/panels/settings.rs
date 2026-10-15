@@ -103,7 +103,12 @@ pub(super) fn choices<V: PartialEq + Copy>(ui: &mut egui::Ui, id: &str, options:
 fn general_tab(app: &mut LightcraftApp, ui: &mut egui::Ui, t: &Tokens) {
     row(ui, t, crate::i18n::tr("Language"), |ui| {
         let languages: Vec<_> = crate::i18n::Locale::ALL.iter().map(|language| (*language, language.name())).collect();
-        choices(ui, "settingsLanguage", &languages, &mut app.ui.language);
+        // FreeANDIY: with Slovak, eleven languages no longer fit in a row of buttons; a menu holds any number.
+        egui::ComboBox::from_id_salt("settingsLanguage").selected_text(app.ui.language.name()).show_ui(ui, |ui| {
+            for (language, name) in &languages {
+                ui.selectable_value(&mut app.ui.language, *language, *name);
+            }
+        });
         crate::i18n::set_language(app.ui.language);
     });
     heading(ui, t, crate::i18n::tr("Library"));

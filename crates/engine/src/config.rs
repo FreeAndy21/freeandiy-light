@@ -247,8 +247,8 @@ mod config_tests {
         let vars = [("HOME", "/user"), ("APPDATA", "/roaming"), ("XDG_CONFIG_HOME", "/xdg")];
         assert_eq!(resolve(Platform::Mac, &vars), Some(PathBuf::from("/user/Library/Application Support/FreeANDIY Light")));
         assert_eq!(resolve(Platform::Windows, &vars), Some(PathBuf::from("/roaming/FreeANDIY Light")));
-        assert_eq!(resolve(Platform::Other, &vars), Some(PathBuf::from("/xdg/lightcraft")));
-        assert_eq!(resolve(Platform::Other, &[("HOME", "/user")]), Some(PathBuf::from("/user/.config/lightcraft")));
+        assert_eq!(resolve(Platform::Other, &vars), Some(PathBuf::from("/xdg/freeandiy-light")));
+        assert_eq!(resolve(Platform::Other, &[("HOME", "/user")]), Some(PathBuf::from("/user/.config/freeandiy-light")));
         for platform in [Platform::Mac, Platform::Windows, Platform::Other] {
             assert_eq!(resolve(platform, &[]), None);
         }

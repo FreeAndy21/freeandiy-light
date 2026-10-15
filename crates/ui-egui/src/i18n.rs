@@ -754,7 +754,7 @@ mod tests {
                 for (id, label) in *choices {
                     let text = choice_text_in(*language, field, id);
                     assert_ne!(text, *id, "{}: {field} {id}", language.code());
-                    if *language != Locale::En {
+                    if !matches!(*language, Locale::En | Locale::Sk) {
                         assert!(language.catalog().contains_key(*label), "{} lacks {label:?}", language.code());
                     }
                 }

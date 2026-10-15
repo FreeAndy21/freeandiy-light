@@ -1127,5 +1127,5 @@ fn legacy_lightcraft_dng_keeps_the_sensor_anchored_pattern() {
     };
     assert_eq!(build("FreeANDIY Light").cfa.unwrap().name(), "GRBG");
     assert_eq!(build("Adobe Photoshop Lightroom").cfa.unwrap().name(), "BGGR");
-    assert_ne!(lightcraft_raw::dngwrite::SOFTWARE, "FreeANDIY Light");
+    assert_ne!(lightcraft_raw::dngwrite::SOFTWARE, "LightCraft");
 }

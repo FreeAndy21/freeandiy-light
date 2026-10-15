@@ -494,3 +494,10 @@ include = ["docs/whats-new.md"]
 regex = '\bLightCraft\b'
 replace = "{{this.name}}"
 min = 1
+
+[[replace]]
+name = "config test: the Linux settings folder is freeandiy-light, like the code"
+include = ["crates/engine/src/config.rs"]
+find = '/lightcraft")'
+replace = '/freeandiy-light")'
+min = 2

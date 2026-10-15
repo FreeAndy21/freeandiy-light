@@ -546,3 +546,10 @@ replace = '''        // FreeANDIY: with Slovak, eleven languages no longer fit i
             }
         });'''
 min = 1
+
+[[replace]]
+name = "i18n tests: choice labels in every complete language (not the partial Slovak one)"
+include = ["crates/ui-egui/src/i18n.rs"]
+find = "                    if *language != Locale::En {"
+replace = "                    if !matches!(*language, Locale::En | Locale::Sk) {"
+min = 1

@@ -338,6 +338,20 @@ replace = '"{{this.repo}}${1}"'
 min = 1
 
 [[replace]]
+name = "protect: cargo features lightcraft/heif, lightcraft-cli/heif and the README image path"
+include = ["packaging/**"]
+regex = 'lightcraft((-cli)?/heif)'
+replace = '@@KEEPL@@${1}'
+min = 4
+
+[[replace]]
+name = "protect: the README image the AppStream metadata links to"
+include = ["packaging/**"]
+find = "docs/images/lightcraft"
+replace = "docs/images/@@KEEPL@@"
+min = 1
+
+[[replace]]
 name = "packaging/CI: executables, file names, paths"
 include = ["packaging/**", ".github/**", "Dockerfile"]
 regex = 'lightcraft'
@@ -553,3 +567,10 @@ include = ["crates/ui-egui/src/i18n.rs"]
 find = "                    if *language != Locale::En {"
 replace = "                    if !matches!(*language, Locale::En | Locale::Sk) {"
 min = 1
+
+[[replace]]
+name = "restore the protected feature names and image path"
+include = ["packaging/**"]
+find = "@@KEEPL@@"
+replace = "lightcraft"
+min = 5

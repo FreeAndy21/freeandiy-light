@@ -131,9 +131,29 @@ $UiBannerBmp = Join-Path $Stage 'ui-banner.bmp'
 New-PanelBitmap $UiDialogBmp 493 312 164 ([byte[]](0x4E, 0x7B, 0xFB)) ([byte[]](0xFF, 0xFF, 0xFF))
 New-PanelBitmap $UiBannerBmp 493 58 0 ([byte[]](0xFF, 0xFF, 0xFF)) ([byte[]](0xFF, 0xFF, 0xFF))
 
+# FreeANDIY: the MSI installs these next to the app (Apache-2.0 4(d); same set as the portable ZIP).
+$FaNotices = Join-Path $Stage 'freeandiy-notices'
+Remove-Item -Recurse -Force $FaNotices -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Force -Path $FaNotices | Out-Null
+foreach ($f in 'LICENSE', 'LICENSE-MIT', 'LICENSE-APACHE', 'NOTICE', 'ATTRIBUTION.md', 'ASSETS.md') {
+  $p = Join-Path $Root $f
+  if (Test-Path $p) { Copy-Item $p $FaNotices }
+}
+Copy-Item (Join-Path $Root 'freeandiy\assets\fonts\OFL-*.txt') $FaNotices
+Copy-Item (Join-Path $Root 'freeandiy\assets\brand\LICENSE-brand.txt') (Join-Path $FaNotices 'LICENSE-FreeANDIY-brand.txt')
+if ($env:CRAFT_FONTS_DIR) {
+  Get-ChildItem -Path (Join-Path $env:CRAFT_FONTS_DIR 'fonts') -Directory -ErrorAction SilentlyContinue | ForEach-Object {
+    $lic = Join-Path $_.FullName 'OFL.txt'
+    if (Test-Path $lic) { Copy-Item $lic (Join-Path $FaNotices "OFL-$($_.Name).txt") }
+  }
+}
+foreach ($f in 'LICENSE-MIT', 'LICENSE-APACHE', 'NOTICE', 'ATTRIBUTION.md') {
+  if (-not (Test-Path (Join-Path $FaNotices $f))) { throw "MSI notices: $f is missing" }
+}
+
 $Msi = Join-Path $Dist "freeandiy-light-$Version-windows-$Arch.msi"
 Invoke-Native 'wix build' {
-  wix build (Join-Path $PSScriptRoot 'lightcraft.wxs') -arch $Arch -culture en-us @ExtArgs `
+  wix build (Join-Path $PSScriptRoot 'lightcraft.wxs') -arch $Arch -d "NoticesDir=$FaNotices" -culture en-us @ExtArgs `
     -d "Version=$MsiVersion" -d "BinDir=$Stage" -d "IconPath=$(Join-Path $Root 'assets\app-icon\freeandiy-light.ico')" `
     -d "UiDialogBmp=$UiDialogBmp" -d "UiBannerBmp=$UiBannerBmp" `
     -o $Msi

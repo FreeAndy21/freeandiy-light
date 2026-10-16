@@ -68,6 +68,7 @@
 
     <Feature Id="Main" Title="FreeANDIY Light" Level="1">
       <ComponentGroupRef Id="LightcraftFiles" />
+      <ComponentGroupRef Id="FreeandiyNotices" />
     </Feature>
 
     <UIRef Id="LightcraftUI" />
@@ -206,6 +207,13 @@
       <Component Id="LightcraftCli">
         <File Id="LightcraftCliExe" Source="$(var.BinDir)\freeandiy-light-cli.exe" KeyPath="yes" />
       </Component>
+    </ComponentGroup>
+  </Fragment>
+  <!-- FreeANDIY: licences, NOTICE, attribution, font licences and brand terms (Apache-2.0 4(d)),
+       staged by package.ps1. -->
+  <Fragment>
+    <ComponentGroup Id="FreeandiyNotices" Directory="INSTALLFOLDER">
+      <Files Include="$(var.NoticesDir)\*" />
     </ComponentGroup>
   </Fragment>
 </Wix>

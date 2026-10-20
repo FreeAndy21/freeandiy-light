@@ -112,7 +112,8 @@ fn launcher(app: &str) -> Result<Launcher, String> {
         return Ok(if cfg!(target_os = "macos") { Launcher::MacApp(app.to_string()) } else { Launcher::Program(PathBuf::from(app)) });
     }
     find_photocraft().ok_or_else(|| {
-        "FreeANDIY Photo isn't installed. Get it from https://freeandiy.freeandy.agency/photo, or give where it is in Settings ▸ External Editing.".to_string()
+        "FreeANDIY Photo isn't installed. Get it from https://freeandiy-web.vercel.app/photo, or give where it is in Settings ▸ External Editing."
+            .to_string()
     })
 }
 

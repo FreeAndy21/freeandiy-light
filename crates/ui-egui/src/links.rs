@@ -3,9 +3,9 @@
 /// The app's id in ArtCraft URLs.
 pub const APP: &str = "lightcraft";
 /// The ArtCraft website.
-pub const WEBSITE: &str = "https://freeandiy.freeandy.agency";
+pub const WEBSITE: &str = "https://freeandiy-web.vercel.app";
 /// This app's page on the ArtCraft website.
-pub const APP_PAGE: &str = "https://freeandiy.freeandy.agency/light";
+pub const APP_PAGE: &str = "https://freeandiy-web.vercel.app/light";
 /// This app's source repository.
 pub const GITHUB: &str = "https://github.com/FreeAndy21/freeandiy-light";
 
